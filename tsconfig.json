@@ -6,10 +6,10 @@
       "sourceMap": true,
       "moduleResolution": "nodenext",
       "resolveJsonModule": true,
-      "allowSyntheticDefaultImports": true
+      "allowSyntheticDefaultImports": true,
     },
     "files": [
-      "./src/main.ts"
+      "./src/main.ts",
     ],
     "resolveJsonModule": true,
     "esModuleInterop": true,

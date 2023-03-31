@@ -4,3 +4,14 @@
     width: 100vw;
     height: 100vh;
 }
+body{
+    background-color: #130921;
+}
+canvas {
+    width: 100%;
+    height: auto;
+    position: absolute;
+    top: 50%;
+    bottom: 50%;
+    transform: translate(0, -50%);
+}

@@ -2,6 +2,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const path = require('path');
+const { ProvidePlugin, ExternalsPlugin } = require('webpack');
 
 module.exports = {
   mode: 'development',
@@ -46,13 +47,9 @@ module.exports = {
     new CopyWebpackPlugin({
       patterns: [
         {
-          from: '*.html',
-          to: '[name].[ext]',
+          from: './assets/**/*',
+          to: './',
           context: './',
-        },
-        {
-          from: 'assets/**/*',
-          to: 'assets',
           globOptions: {
             ignore: ['**/README'],
           },
@@ -64,6 +61,9 @@ module.exports = {
       filename: 'index.html',
     }),
     new MiniCssExtractPlugin(),
+    new ProvidePlugin({
+      PIXI: 'pixi.js',
+    }),
   ],
   resolve: {
     extensions: ['.ts', '.js', '.json'],
