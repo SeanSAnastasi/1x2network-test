@@ -45,7 +45,7 @@ export class Symbol extends PIXI.Container{
         this.key = Constants.slot.symbolOrder[key];
         this.create()
     }
-    public getIsAnimating(){
+    public getIsAnimating(): boolean{
         return this.isAnimating;
     }
 }

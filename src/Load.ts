@@ -25,8 +25,6 @@ export class Load{
     private loadError(err, loader, resource){
         console.error('Failed to load asset '+resource.name, err);
     }
-    private loadComplete(){
-    }
     public static getAsset(key:string){
         return PIXI.Loader.shared.resources[key];
     }

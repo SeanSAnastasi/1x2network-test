@@ -14,8 +14,8 @@ export class Reel extends PIXI.Container{
             this.symbols.push(new Symbol(app,key, this.getSymbolPositionX(index), this.y));
         })
     }
-    private getSymbolPositionX(index:number){
-        let posX = this.x - (Math.floor(Constants.slot.columns/2))*Constants.slot.symbolWidth + index*Constants.slot.symbolWidth;
+    private getSymbolPositionX(index:number): number{
+        let posX: number = this.x - (Math.floor(Constants.slot.columns/2))*Constants.slot.symbolWidth + index*Constants.slot.symbolWidth;
         if(Constants.slot.columns % 2 === 0){
             posX += Constants.slot.symbolWidth/2;
         }
@@ -34,7 +34,7 @@ export class Reel extends PIXI.Container{
         })
     }
     public isAnimating(): boolean{
-        let animating = false
+        let animating: boolean = false
         this.symbols.forEach((symbol)=>{
             if(symbol.getIsAnimating()){
                 animating = true;
