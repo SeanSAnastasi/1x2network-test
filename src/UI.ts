@@ -115,10 +115,10 @@ export class UI extends PIXI.Container{
     private async startSpin() {
         if (this.balance >= this.betIncrements[this.curBet] && !this.checkReelAnimating() && !this.spin.disabled) {
             this.checkDisable(true);
-          const data = await this.spin.spin();
-          const win = new Win(this.app.screen.width / 2, this.app.screen.height / 2 - 400);
-          this.app.stage.addChild(win);
-          this.updateBalance(this.balance - this.betIncrements[this.curBet]);
+            this.updateBalance(this.balance - this.betIncrements[this.curBet]);
+            const win = new Win(this.app.screen.width / 2, this.app.screen.height / 2 - 400);
+            this.app.stage.addChild(win);
+            const data = await this.spin.spin();
       
           if (data.win > 0) {
             win
@@ -135,7 +135,7 @@ export class UI extends PIXI.Container{
       
     private updateBalance(balance:number){
         this.balance = balance;
-        this.balanceText.text = (this.balance/100).toFixed(2);
+        this.balanceText.text = "€"+(this.balance/100).toFixed(2);
         
     }
     private checkReelAnimating(): boolean{
