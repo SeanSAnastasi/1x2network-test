@@ -8,7 +8,7 @@ import {UI} from './UI';
 import * as Constants from './Constants';
 
 // simple application configuration
-let config  = {width: 1920, height: 1080}
+let config  = {width: 1920, height: 1080, backgroundColor: 0x2980b9}
 
 
 let app: PIXI.Application;
@@ -26,8 +26,12 @@ window.addEventListener('load', async function() {
 
 
     await loader.loadAssets();
-    const reel: Reel = new Reel(app,Constants.slot.defaultSymbols, centerX, centerY);
-    const ui: UI = new UI(app, centerX, app.screen.height - 100, reel);
+    let reels: Reel[] = []
+    for (let index = 0; index < Constants.slot.columns; index++) {
+        const reel: Reel = new Reel(app,Constants.slot.defaultSymbols[0], centerX+index*Constants.slot.symbolWidth - 1.5*Constants.slot.symbolWidth, centerY );
+        reels.push(reel);
+    }
+    const ui: UI = new UI(app, centerX, app.screen.height - 100, reels);
     
     app.start();
 

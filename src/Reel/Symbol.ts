@@ -6,12 +6,11 @@ export class Symbol extends PIXI.Container{
     private img: PIXI.spine.Spine;
     private numLoops = 0;
     private isAnimating: boolean = false;
-    constructor(app:PIXI.Application ,key:number, x: number=0, y: number=0){
+    constructor(key:number, x: number=0, y: number=0){
         super();
         this.key = Constants.slot.symbolOrder[key];
         this.x = x;
         this.y = y;
-        app.stage.addChild(this);
         this.create();
     }
     private create(): void {

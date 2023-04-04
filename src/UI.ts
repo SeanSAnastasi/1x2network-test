@@ -13,13 +13,13 @@ export class UI extends PIXI.Container{
     private minus: PIXI.Text;
     private app: PIXI.Application;
     private spin: Spin;
-    private reel: Reel;
-    constructor(app:PIXI.Application, x:number, y:number, reel: Reel){
+    private reels: Reel[];
+    constructor(app:PIXI.Application, x:number, y:number, reels: Reel[]){
         super();
         this.x = x;
         this.y = y;
         this.app = app;
-        this.reel = reel;
+        this.reels = reels;
         this.app.stage.addChild(this);
         this.create()
     }
@@ -41,7 +41,7 @@ export class UI extends PIXI.Container{
         this.balanceText = new PIXI.Text("€"+(this.balance/100).toFixed(2),fontBalance);
         this.balanceText.x -= this.app.screen.width/2 - 100;
 
-        this.spin = new Spin(-60,-100,60, this.reel);
+        this.spin = new Spin(-60,-100,60, this.reels);
         this.spin.on('mousedown', ()=>{this.startSpin()});
         this.spin.on('touchstart', ()=>{this.startSpin()});
 
@@ -85,16 +85,17 @@ export class UI extends PIXI.Container{
 
     private updateBet(betIndex:number){
         this.checkDisable();
-        if (betIndex < 0 || betIndex > this.betIncrements.length - 1 || this.reel.isAnimating()) {
+        if (betIndex < 0 || betIndex > this.betIncrements.length - 1 || this.checkReelAnimating()) {
             return;
         }
         this.curBet = betIndex;
         this.betText.text = "€"+(this.betIncrements[this.curBet]/100).toString();
     }
-    private checkDisable(){
-        if(this.reel.isAnimating()){
+    private checkDisable(force:boolean=false){
+        if(this.checkReelAnimating() || this.spin.disabled || force){
             this.minus.style.fill = 0x999999;
             this.plus.style.fill = 0x999999;
+            this.spin.updateFill(0x999999);
             return;
         }
         if(this.curBet === 0){
@@ -107,29 +108,43 @@ export class UI extends PIXI.Container{
         }
         this.plus.style.fill = 0xFFFFFF;
         this.minus.style.fill = 0xFFFFFF;
+        this.spin.updateFill(0xFFFFFF);
+
 
     }
-    private startSpin(){
-        if(this.balance>=this.betIncrements[this.curBet] && !this.reel.isAnimating()){
-            const data = this.spin.spin();
-            const win = new Win(this.app.screen.width/2, this.app.screen.height/2 - 300);
-            this.app.stage.addChild(win);
-            this.updateBalance(this.balance-this.betIncrements[this.curBet]);
-
-            if(data.win>0){
-                win.showWin(data.win, this.betIncrements[this.curBet]).then(()=>{
-                    this.updateBalance(this.balance+this.betIncrements[this.curBet]*data.win);
-                    this.app.stage.removeChild(win);
-                    this.checkDisable();
-                })
-            }
-            
+    private async startSpin() {
+        if (this.balance >= this.betIncrements[this.curBet] && !this.checkReelAnimating() && !this.spin.disabled) {
+            this.checkDisable(true);
+          const data = await this.spin.spin();
+          const win = new Win(this.app.screen.width / 2, this.app.screen.height / 2 - 400);
+          this.app.stage.addChild(win);
+          this.updateBalance(this.balance - this.betIncrements[this.curBet]);
+      
+          if (data.win > 0) {
+            win
+              .showWin(data.win, this.betIncrements[this.curBet])
+              .then(() => {
+                this.updateBalance(this.balance + this.betIncrements[this.curBet] * data.win);
+                this.checkDisable();
+                this.app.stage.removeChild(win);
+              });
+          }
         }
         this.checkDisable();
-    }
+      }   
+      
     private updateBalance(balance:number){
         this.balance = balance;
         this.balanceText.text = (this.balance/100).toFixed(2);
         
+    }
+    private checkReelAnimating(): boolean{
+        let animating = false;
+        this.reels.forEach(reel=>{
+            if(reel.isAnimating()){
+                animating = true;
+            }
+        })
+        return animating;
     }
 }
