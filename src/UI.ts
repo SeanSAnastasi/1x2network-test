@@ -85,7 +85,7 @@ export class UI extends PIXI.Container{
 
     private updateBet(betIndex:number){
         this.checkDisable();
-        if (betIndex < 0 || betIndex > this.betIncrements.length - 1 || this.checkReelAnimating()) {
+        if (betIndex < 0 || betIndex > this.betIncrements.length - 1 || this.checkReelAnimating() || this.spin.disabled) {
             return;
         }
         this.curBet = betIndex;
